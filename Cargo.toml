@@ -10,4 +10,22 @@ members = [
     "packages/vfs-rs",
 ]
 
+[lib]
+name = "clientkit"
+crate-type = ["staticlib", "cdylib"]
+
 [dependencies]
+downloader-rs = { path = "packages/downloader-rs" }
+vfs-rs = { path = "packages/vfs-rs" }
+
+[build-dependencies]
+csbindgen = { version = "1.9.0" }
+
+[profile.release]
+opt-level = 'z'
+lto = true
+codegen-units = 1
+panic = 'abort'
+debug = 0
+debug-assertions = false
+strip = "debuginfo"
