@@ -1,3 +1,6 @@
 [submodule "packages/downloader-rs"]
 	path = packages/downloader-rs
 	url = https://github.com/ilinchunjie/downloader-rs.git
+[submodule "packages/vfs-rs"]
+	path = packages/vfs-rs
+	url = https://github.com/ilinchunjie/vfs-rs.git
