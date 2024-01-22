@@ -54,7 +54,6 @@ jobs:
       - name: checkout submodules
         shell: bash
         run: |
-          git pull --recurse-submodules
           git submodule update --remote --recursive
 
       - name: install rust
@@ -121,7 +120,6 @@ jobs:
       - name: checkout submodules
         shell: bash
         run: |
-          git pull --recurse-submodules
           git submodule update --remote --recursive
 
       - name: install rust
@@ -172,7 +170,6 @@ jobs:
       - name: checkout submodules
         shell: bash
         run: |
-          git pull --recurse-submodules
           git submodule update --remote --recursive
 
       - name: install rust
