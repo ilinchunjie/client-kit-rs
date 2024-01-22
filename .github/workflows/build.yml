@@ -74,7 +74,6 @@ jobs:
           staging="clientkit-${{ matrix.target }}"
           mkdir -p "$staging"
           
-          cp -r csharp "$staging"
           if [ "${{ matrix.build }}" = "win64-msvc" ]; then
             cp "target/${{ matrix.target }}/release/${{ matrix.output_name }}" "$staging"
             7z a "$staging.zip" "$staging"
@@ -137,7 +136,6 @@ jobs:
           staging="clientkit-${{ matrix.target }}"
           mkdir -p "$staging"
           
-          cp -r csharp "$staging"
           cp "target/${{ matrix.target }}/release/libclientkit.so" "$staging"
           tar czf "$staging.tar.gz" "$staging"
           echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
@@ -188,8 +186,38 @@ jobs:
           staging="clientkit-aarch64-apple-ios"
           mkdir -p "$staging"
           
-          cp -r csharp "$staging"
           cp "target/aarch64-apple-ios/release/libclientkit.a" "$staging"
+          tar czf "$staging.tar.gz" "$staging"
+          echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
+
+      - name: upload
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ env.ASSET }}
+          asset_name: ${{ env.ASSET }}
+          asset_content_type: application/octet-stream
+
+  build-csharp:
+    name: build-csharp
+    needs: [ 'create-release' ]
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: build archive
+        shell: bash
+        run: |
+          staging="clientkit-csharp"
+          mkdir -p "$staging"
+
+          cp -r csharp "$staging"
           tar czf "$staging.tar.gz" "$staging"
           echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
 
