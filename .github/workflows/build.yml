@@ -74,7 +74,7 @@ jobs:
           staging="clientkit-${{ matrix.target }}"
           mkdir -p "$staging"
           
-          cp csharp "$staging"
+          cp -r csharp "$staging"
           if [ "${{ matrix.build }}" = "win64-msvc" ]; then
             cp "target/${{ matrix.target }}/release/${{ matrix.output_name }}" "$staging"
             7z a "$staging.zip" "$staging"
@@ -137,7 +137,7 @@ jobs:
           staging="clientkit-${{ matrix.target }}"
           mkdir -p "$staging"
           
-          cp csharp "$staging"
+          cp -r csharp "$staging"
           cp "target/${{ matrix.target }}/release/libclientkit.so" "$staging"
           tar czf "$staging.tar.gz" "$staging"
           echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
@@ -188,7 +188,7 @@ jobs:
           staging="clientkit-aarch64-apple-ios"
           mkdir -p "$staging"
           
-          cp csharp "$staging"
+          cp -r csharp "$staging"
           cp "target/aarch64-apple-ios/release/libclientkit.a" "$staging"
           tar czf "$staging.tar.gz" "$staging"
           echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
