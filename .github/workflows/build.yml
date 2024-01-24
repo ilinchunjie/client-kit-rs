@@ -211,6 +211,10 @@ jobs:
         with:
           submodules: true
 
+      - name: build library
+        run: |
+          cargo build --release
+
       - name: build archive
         shell: bash
         run: |
