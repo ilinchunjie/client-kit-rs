@@ -8,6 +8,16 @@ pub struct FFIString {
     pub len: u32,
 }
 
+#[no_mangle]
+pub extern "C" fn FFIString_Dispose(ptr: *mut FFIString) {
+    if ptr.is_null() {
+        return;
+    }
+    unsafe {
+        let _ = Box::from_raw(ptr);
+    }
+}
+
 impl Display for FFIString {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", unsafe { CStr::from_ptr(self.ptr).to_string_lossy().to_string() })
