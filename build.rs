@@ -1,6 +1,6 @@
 fn main() {
     csbindgen::Builder::default()
-        .csharp_class_accessibility("internal")
+        .csharp_class_accessibility("public")
         .csharp_class_name("FFI")
         .csharp_namespace("URS.ClientKit")
         .csharp_dll_name("clientkit")
