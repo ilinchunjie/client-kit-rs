@@ -19,7 +19,7 @@ downloader-rs = { path = "packages/downloader-rs" }
 vfs-rs = { path = "packages/vfs-rs" }
 
 [build-dependencies]
-csbindgen = { version = "1.9.0" }
+csbindgen = { git = "https://github.com/ilinchunjie/csbindgen.git", version = "1.9.0" }
 
 [profile.release]
 opt-level = 'z'

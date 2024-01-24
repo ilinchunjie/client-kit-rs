@@ -1,31 +1,31 @@
 use crate::ffi::FFIString;
 
 #[repr(C)]
-pub struct DownloadOperation {}
+pub struct DownloadOperationPtr {}
 
 #[no_mangle]
-pub extern "C" fn DownloadOperation_GetDownloadStatus(ptr: *mut DownloadOperation) -> u8 {
+pub extern "C" fn DownloadOperation_GetDownloadStatus(ptr: *mut DownloadOperationPtr) -> u8 {
     let ptr = ptr as *mut downloader_rs::download_operation::DownloadOperation;
     let operation = unsafe { ptr.as_mut().expect("invalid ptr: ") };
     operation.status().into()
 }
 
 #[no_mangle]
-pub extern "C" fn DownloadOperation_IsDone(ptr: *mut DownloadOperation) -> bool {
+pub extern "C" fn DownloadOperation_IsDone(ptr: *mut DownloadOperationPtr) -> bool {
     let ptr = ptr as *mut downloader_rs::download_operation::DownloadOperation;
     let operation = unsafe { ptr.as_mut().expect("invalid ptr: ") };
     operation.is_done()
 }
 
 #[no_mangle]
-pub extern "C" fn DownloadOperation_IsError(ptr: *mut DownloadOperation) -> bool {
+pub extern "C" fn DownloadOperation_IsError(ptr: *mut DownloadOperationPtr) -> bool {
     let ptr = ptr as *mut downloader_rs::download_operation::DownloadOperation;
     let operation = unsafe { ptr.as_mut().expect("invalid ptr: ") };
     operation.is_error()
 }
 
 #[no_mangle]
-pub extern "C" fn DownloadOperation_Error(ptr: *mut DownloadOperation) -> *mut FFIString {
+pub extern "C" fn DownloadOperation_Error(ptr: *mut DownloadOperationPtr) -> *mut FFIString {
     let ptr = ptr as *mut downloader_rs::download_operation::DownloadOperation;
     let operation = unsafe { ptr.as_mut().expect("invalid ptr: ") };
     let error = operation.error().to_string().into();
@@ -33,28 +33,28 @@ pub extern "C" fn DownloadOperation_Error(ptr: *mut DownloadOperation) -> *mut F
 }
 
 #[no_mangle]
-pub extern "C" fn DownloadOperation_GetDownloadedSize(ptr: *mut DownloadOperation) -> u64 {
+pub extern "C" fn DownloadOperation_GetDownloadedSize(ptr: *mut DownloadOperationPtr) -> u64 {
     let ptr = ptr as *mut downloader_rs::download_operation::DownloadOperation;
     let operation = unsafe { ptr.as_mut().expect("invalid ptr: ") };
     operation.downloaded_size()
 }
 
 #[no_mangle]
-pub extern "C" fn DownloadOperation_GetDownloadProgress(ptr: *mut DownloadOperation) -> f64 {
+pub extern "C" fn DownloadOperation_GetDownloadProgress(ptr: *mut DownloadOperationPtr) -> f64 {
     let ptr = ptr as *mut downloader_rs::download_operation::DownloadOperation;
     let operation = unsafe { ptr.as_mut().expect("invalid ptr: ") };
     operation.progress()
 }
 
 #[no_mangle]
-pub extern "C" fn DownloadOperation_Stop(ptr: *mut DownloadOperation) {
+pub extern "C" fn DownloadOperation_Stop(ptr: *mut DownloadOperationPtr) {
     let ptr = ptr as *mut downloader_rs::download_operation::DownloadOperation;
     let operation = unsafe { ptr.as_mut().expect("invalid ptr: ") };
     operation.stop()
 }
 
 #[no_mangle]
-pub extern "C" fn DownloadOperation_Dispose(ptr: *mut DownloadOperation) {
+pub extern "C" fn DownloadOperation_Dispose(ptr: *mut DownloadOperationPtr) {
     let ptr = ptr as *mut downloader_rs::download_operation::DownloadOperation;
     if ptr.is_null() {
         return;
