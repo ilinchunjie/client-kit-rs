@@ -40,8 +40,8 @@ pub extern "C" fn DownloadService_Stop(ptr: *mut DownloadServicePtr) {
 pub extern "C" fn DownloadService_AddDownload(ptr: *mut DownloadServicePtr, config: DownloadConfig) -> *mut DownloadOperationPtr {
     let ptr = ptr as *mut DownloadService;
     let download_service = unsafe { ptr.as_mut().expect("invalid ptr: ") };
-    let url = config.url.to_string();
-    let path = config.path.to_string();
+    let url: String = config.url.into();
+    let path: String = config.path.into();
     let config = DownloadConfiguration::new()
         .set_url(&url)
         .set_file_path(&path)

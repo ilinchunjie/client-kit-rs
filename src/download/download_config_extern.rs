@@ -1,10 +1,10 @@
-use crate::ffi::FFIString;
+use crate::ffi::UTF16String;
 
 #[repr(C)]
 #[no_mangle]
 pub struct DownloadConfig {
-    pub url: FFIString,
-    pub path: FFIString,
+    pub url: UTF16String,
+    pub path: UTF16String,
     pub retry_times: u8,
     pub chunk_download: bool,
     pub version: i64,
@@ -13,6 +13,4 @@ pub struct DownloadConfig {
 }
 
 #[no_mangle]
-pub extern "C" fn DownloadConfig_Extern(config: DownloadConfig) {
-
-}
+pub extern "C" fn DownloadConfig_Extern(config: DownloadConfig) {}

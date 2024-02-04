@@ -1,4 +1,4 @@
-use crate::ffi::FFIString;
+use std::ffi::{c_char, CString};
 
 #[repr(C)]
 pub struct DownloadOperationPtr {}
@@ -25,11 +25,11 @@ pub extern "C" fn DownloadOperation_IsError(ptr: *mut DownloadOperationPtr) -> b
 }
 
 #[no_mangle]
-pub extern "C" fn DownloadOperation_Error(ptr: *mut DownloadOperationPtr) -> *mut FFIString {
+pub extern "C" fn DownloadOperation_Error(ptr: *mut DownloadOperationPtr) -> *mut c_char {
     let ptr = ptr as *mut downloader_rs::download_operation::DownloadOperation;
     let operation = unsafe { ptr.as_mut().expect("invalid ptr: ") };
-    let error = operation.error().to_string().into();
-    Box::into_raw(Box::new(error))
+    let error = CString::new(operation.error().to_string()).unwrap().into_raw();
+    error
 }
 
 #[no_mangle]

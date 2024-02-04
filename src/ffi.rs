@@ -1,47 +1,23 @@
-use std::ffi::{c_char, CStr, CString};
-use std::fmt::{Display};
+use std::ffi::{c_char, CString};
 
 #[repr(C)]
 #[derive(Clone)]
-pub struct FFIString {
-    pub ptr: *mut c_char,
+pub struct UTF16String {
+    pub ptr: *const u16,
     pub len: u32,
 }
 
+impl Into<String> for UTF16String {
+    fn into(self) -> String {
+        let slice = unsafe { std::slice::from_raw_parts(self.ptr, self.len as usize) };
+        String::from_utf16(slice).unwrap()
+    }
+}
+
 #[no_mangle]
-pub extern "C" fn FFIString_Dispose(ptr: *mut FFIString) {
-    if ptr.is_null() {
-        return;
-    }
-    unsafe {
-        let _ = Box::from_raw(ptr);
-    }
-}
+pub extern "C" fn UTF16String_Extern(_: UTF16String) {}
 
-impl Display for FFIString {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", unsafe { CStr::from_ptr(self.ptr).to_string_lossy().to_string() })
-    }
-}
-
-impl From<String> for FFIString {
-    fn from(value: String) -> Self {
-        let len = value.as_bytes().len() as u32;
-        let ptr = CString::new(value).unwrap().into_raw();
-        FFIString {
-            ptr,
-            len,
-        }
-    }
-}
-
-impl From<&str> for FFIString {
-    fn from(value: &str) -> Self {
-        let len = value.as_bytes().len() as u32;
-        let ptr = CString::new(value).unwrap().into_raw();
-        FFIString {
-            ptr,
-            len,
-        }
-    }
+#[no_mangle]
+pub unsafe extern "C" fn free_c_string(str: *mut c_char) {
+    unsafe { CString::from_raw(str) };
 }
