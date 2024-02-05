@@ -1,3 +1,4 @@
 pub mod download;
+pub mod vfs;
 pub mod ffi;
-mod byte_buffer;
+pub mod byte_buffer;
