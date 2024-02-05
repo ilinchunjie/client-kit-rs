@@ -50,6 +50,7 @@ pub extern "C" fn DownloadService_AddDownload(ptr: *mut DownloadServicePtr, conf
         .set_remote_version(config.version)
         .set_retry_times_on_failure(config.retry_times)
         .set_timeout(config.timeout)
+        .set_download_in_memory(config.download_in_memory)
         .build();
     let operation = download_service.add_downloader(config);
     Box::into_raw(Box::new(operation)) as *mut DownloadOperationPtr

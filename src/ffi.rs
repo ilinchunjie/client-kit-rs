@@ -15,7 +15,7 @@ impl Into<String> for UTF16String {
 }
 
 #[no_mangle]
-pub extern "C" fn UTF16String_Extern(_: UTF16String) {}
+pub extern "C" fn UTF16String_Extern(value: UTF16String) {}
 
 #[no_mangle]
 pub unsafe extern "C" fn free_c_string(str: *mut c_char) {

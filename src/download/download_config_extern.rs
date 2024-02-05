@@ -7,6 +7,7 @@ pub struct DownloadConfig {
     pub path: UTF16String,
     pub retry_times: u8,
     pub chunk_download: bool,
+    pub download_in_memory: bool,
     pub version: i64,
     pub chunk_size: u64,
     pub timeout: u64,

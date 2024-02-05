@@ -1,4 +1,5 @@
 use std::ffi::{c_char, CString};
+use crate::byte_buffer::ByteBuffer;
 
 #[repr(C)]
 pub struct DownloadOperationPtr {}
@@ -44,6 +45,15 @@ pub extern "C" fn DownloadOperation_GetDownloadProgress(ptr: *mut DownloadOperat
     let ptr = ptr as *mut downloader_rs::download_operation::DownloadOperation;
     let operation = unsafe { ptr.as_mut().expect("invalid ptr: ") };
     operation.progress()
+}
+
+#[no_mangle]
+pub extern "C" fn DownloadOperation_Bytes(ptr: *mut DownloadOperationPtr) -> *mut ByteBuffer {
+    let ptr = ptr as *mut downloader_rs::download_operation::DownloadOperation;
+    let operation = unsafe { ptr.as_mut().expect("invalid ptr: ") };
+    let bytes = operation.bytes();
+    let byteBuffer = ByteBuffer::from_vec(bytes);
+    Box::into_raw(Box::new(byteBuffer))
 }
 
 #[no_mangle]
