@@ -26,6 +26,19 @@ impl ByteBuffer {
         }
     }
 
+    pub fn from_slice(bytes: &[u8]) -> Self {
+        let length = i32::try_from(bytes.len()).expect("buffer length cannot fit into a i32.");
+        let capacity = length;
+
+        let mut v = std::mem::ManuallyDrop::new(bytes.to_vec());
+
+        Self {
+            ptr: v.as_mut_ptr(),
+            length,
+            capacity,
+        }
+    }
+
     pub fn from_vec_struct<T: Sized>(bytes: Vec<T>) -> Self {
         let element_size = std::mem::size_of::<T>() as i32;
 

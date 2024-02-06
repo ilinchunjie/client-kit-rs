@@ -3,6 +3,7 @@ use std::io::Read;
 use vfs_rs::zip::zip_archive::ZipArchive;
 use crate::byte_buffer::ByteBuffer;
 use crate::ffi::UTF16String;
+use crate::vfs::zip_file_extern::ZipFilePtr;
 
 #[repr(C)]
 pub struct ZipArchivePtr {}
@@ -20,6 +21,15 @@ pub extern "C" fn ZipArchive_FileExist(ptr: *mut ZipArchivePtr, file_path: UTF16
     let zip_archive = unsafe { ptr.as_mut().expect("invalid ptr: ") };
     let file_path: String = file_path.into();
     return zip_archive.file_exist(&file_path);
+}
+
+#[no_mangle]
+pub extern "C" fn ZipArchive_Open(ptr: *mut ZipArchivePtr, file_path: UTF16String) -> *mut ZipFilePtr {
+    let ptr = ptr as *mut ZipArchive;
+    let zip_archive = unsafe { ptr.as_mut().expect("invalid ptr: ") };
+    let file_path: String = file_path.into();
+    let zip_file = zip_archive.by_name(&file_path).unwrap();
+    return Box::into_raw(Box::new(zip_file)) as *mut ZipFilePtr;
 }
 
 #[no_mangle]
