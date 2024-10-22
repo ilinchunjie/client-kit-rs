@@ -1,43 +1,42 @@
-use std::ffi::{c_char, CString};
+use std::ffi::{c_char, CStr, CString};
 use std::io::Read;
 use vfs_rs::zip::zip_archive::ZipArchive;
 use crate::byte_buffer::ByteBuffer;
-use crate::ffi::UTF16String;
 use crate::vfs::zip_file_extern::ZipFilePtr;
 
 #[repr(C)]
 pub struct ZipArchivePtr {}
 
 #[no_mangle]
-pub extern "C" fn ZipArchive_New(archive_path: UTF16String) -> *mut ZipArchivePtr {
-    let archive_path: String = archive_path.into();
-    let zip_archive = ZipArchive::new(&archive_path).unwrap();
-    return Box::into_raw(Box::new(zip_archive)) as *mut ZipArchivePtr;
+pub extern "C" fn ZipArchive_New(archive_path: *const c_char) -> *mut ZipArchivePtr {
+    let archive_path = unsafe { CStr::from_ptr(archive_path).to_str().unwrap() };
+    let zip_archive = ZipArchive::new(archive_path).unwrap();
+    Box::into_raw(Box::new(zip_archive)) as *mut ZipArchivePtr
 }
 
 #[no_mangle]
-pub extern "C" fn ZipArchive_FileExist(ptr: *mut ZipArchivePtr, file_path: UTF16String) -> bool {
+pub extern "C" fn ZipArchive_FileExist(ptr: *mut ZipArchivePtr, file_path: *const c_char) -> bool {
     let ptr = ptr as *mut ZipArchive;
     let zip_archive = unsafe { ptr.as_mut().expect("invalid ptr: ") };
-    let file_path: String = file_path.into();
-    return zip_archive.file_exist(&file_path);
+    let file_path = unsafe { CStr::from_ptr(file_path).to_str().unwrap() };
+    zip_archive.file_exist(file_path)
 }
 
 #[no_mangle]
-pub extern "C" fn ZipArchive_Open(ptr: *mut ZipArchivePtr, file_path: UTF16String) -> *mut ZipFilePtr {
+pub extern "C" fn ZipArchive_Open(ptr: *mut ZipArchivePtr, file_path: *const c_char) -> *mut ZipFilePtr {
     let ptr = ptr as *mut ZipArchive;
     let zip_archive = unsafe { ptr.as_mut().expect("invalid ptr: ") };
-    let file_path: String = file_path.into();
-    let zip_file = zip_archive.by_name(&file_path).unwrap();
-    return Box::into_raw(Box::new(zip_file)) as *mut ZipFilePtr;
+    let file_path = unsafe { CStr::from_ptr(file_path).to_str().unwrap() };
+    let zip_file = zip_archive.by_name(file_path).unwrap();
+    Box::into_raw(Box::new(zip_file)) as *mut ZipFilePtr
 }
 
 #[no_mangle]
-pub extern "C" fn ZipArchive_ReadAllBytes(ptr: *mut ZipArchivePtr, file_path: UTF16String) -> *mut ByteBuffer {
+pub extern "C" fn ZipArchive_ReadAllBytes(ptr: *mut ZipArchivePtr, file_path: *const c_char) -> *mut ByteBuffer {
     let ptr = ptr as *mut ZipArchive;
     let zip_archive = unsafe { ptr.as_mut().expect("invalid ptr: ") };
-    let file_path: String = file_path.into();
-    let mut zip_file = zip_archive.by_name(&file_path).unwrap();
+    let file_path = unsafe { CStr::from_ptr(file_path).to_str().unwrap() };
+    let mut zip_file = zip_archive.by_name(file_path).unwrap();
     let length = zip_file.len();
     let mut buffer = vec![0u8; length as usize];
     zip_file.read_exact(&mut buffer[0..length as usize]).unwrap();

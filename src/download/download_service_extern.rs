@@ -1,3 +1,4 @@
+use std::ffi::CStr;
 use downloader_rs::download_configuration::DownloadConfiguration;
 use downloader_rs::download_service::DownloadService;
 use crate::download::download_config_extern::DownloadConfig;
@@ -40,11 +41,11 @@ pub extern "C" fn DownloadService_Stop(ptr: *mut DownloadServicePtr) {
 pub extern "C" fn DownloadService_AddDownload(ptr: *mut DownloadServicePtr, config: DownloadConfig) -> *mut DownloadOperationPtr {
     let ptr = ptr as *mut DownloadService;
     let download_service = unsafe { ptr.as_mut().expect("invalid ptr: ") };
-    let url: String = config.url.into();
-    let path: String = config.path.into();
+    let url = unsafe { CStr::from_ptr(config.url).to_str().unwrap() };
+    let path = unsafe { CStr::from_ptr(config.path).to_str().unwrap() };
     let config = DownloadConfiguration::new()
-        .set_url(&url)
-        .set_file_path(&path)
+        .set_url(url)
+        .set_file_path(path)
         .set_chunk_download(config.chunk_download)
         .set_chunk_size(config.chunk_size)
         .set_remote_version(config.version)

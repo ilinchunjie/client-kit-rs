@@ -1,10 +1,10 @@
-use crate::ffi::UTF16String;
+use std::ffi::c_char;
 
 #[repr(C)]
 #[no_mangle]
 pub struct DownloadConfig {
-    pub url: UTF16String,
-    pub path: UTF16String,
+    pub url: *const c_char,
+    pub path: *const c_char,
     pub retry_times: u8,
     pub chunk_download: bool,
     pub download_in_memory: bool,
